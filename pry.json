@@ -1,6 +1,5 @@
 {
    "_id": "_design/app",
-   "_rev": "47-4cc4540a84666591fb9ed0517879d463",
    "rewrites": [
        {
            "from": "",
