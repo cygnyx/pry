@@ -6,10 +6,6 @@
            "to": "_show/index"
        },
        {
-           "from": "/index.html",
-           "to": "index.html"
-       },
-       {
            "from": "*",
            "to": "_show/404"
        }
@@ -20,6 +16,5 @@
    },
    "contents": "(function() {\n\nfunction contents(doc, req) {\n  return (this.head + '<pre>'+JSON.stringify(req)+'</pre>\\n' + this.tail)\n}\n\nmodule.exports = contents\n}())\n",
    "head": "<!DOCTYPE html>\n<html lang=\"en\" class=\"\">\n<head>\n  <meta charset='utf-8'>\n  <meta http-equiv=\"Content-Language\" content=\"en\">\n  <title>Pry - a couchapp manager</title>\n  <script src=\"http://code.jquery.com/jquery-1.11.2.min.js\"></script>\n</head>\n<body>\n<h1>Pry - a couchapp manager</h1>\n",
-   "tail": "</body>\n</html>\n<script>\n$(window).load(function(){$('body').append($('<p>').text('foo'))})\n</script>\n",
-
+   "tail": "</body>\n</html>\n<script>\n$(window).load(function(){$('body').append($('<p>').text('foo'))})\n</script>\n"
 }
