@@ -1,15 +1,3 @@
-```noweave#+title
-pry
-```
-
-```noweave#+tag
-CouchApp Literate Programming
-```
-
-```noweave#+version
-0.0.1
-```
-
 # Introduction
 
 [CouchDB](http://couchdb.apache.org) a database management system server
@@ -73,6 +61,18 @@ You can create a new document by renaming the `_id` field to `bar` and uploading
 You can change the source document name using the option `md` to the editor.
 For example, `?md=READMEFIRST.md` would look for the `READMEFIRST.md` field for
 the source document.
+
+```noweave#+title
+pry
+```
+
+```noweave#+tag
+CouchApp Literate Programming
+```
+
+```noweave#+version
+0.0.1
+```
 
 # CouchDB fields
 
@@ -4258,7 +4258,9 @@ node -e "require('markover').weaveStream()" < README.md > index.html
 
 The display of this 'README.md' file on GitHub is readable, but not
 quite right since GitHub doesn't process the field names for the code
-blocks. Also on GitHub you can copy and paste the pry.json file into
+blocks.
+The generated [index.html](http://cygnyx.github.io/pry) file is better.
+Also on GitHub you can copy and paste the pry.json file into
 the `CouchDB` database.
 
 # Final Thoughts
