@@ -4260,8 +4260,8 @@ The display of this 'README.md' file on GitHub is readable, but not
 quite right since GitHub doesn't process the field names for the code
 blocks.
 The generated [index.html](http://cygnyx.github.io/pry) file is better.
-Also on GitHub you can copy and paste the pry.json file into
-the `CouchDB` database.
+Also on GitHub you can copy and paste the [pry.json](http://cygnyx.github.io/pry/pry.json)
+file into the `CouchDB` database.
 
 # Final Thoughts
 
