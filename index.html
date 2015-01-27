@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Language" content="en">
+  <meta name="viewport" content="initial-scale=1"><title>pry - CouchApp Literate Programming</title>
+<style>html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, a,
+fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video {
+  display: block;
+  margin:0;
+  padding:0;
+  border:0;
+  outline:0;
+  line-height: 140%;
+  font-size: inherit;
+  color: black;
+  vertical-align:baseline;
+  text-decoration: none;
+  background:transparent;
+}
+
+a, code, span, b, i, em { display: inline; }
+
+body {
+  font-size: 100%;
+}
+
+@media print {
+  body {
+    font-size: 80%;
+  }
+}</style><style>#content {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+}
+
+#content #title {
+  clear: both;
+  text-align: center;
+  font-size: 140%;
+  font-weight: bold;
+  margin: 2em 0 0 0;
+}
+
+#content #tag {
+  clear: both;
+  text-align: center;
+  font-size: 110%;
+  margin: 0 0 1em 0;
+}
+#content #toc {
+  padding: 0 0 0 1em;
+  max-width: 96%;
+  page-break-after: always;
+}
+
+@media screen and (min-width: 641px) {
+  #content #toc {
+    float: left;
+    max-width: 26%;
+  }
+}
+
+#content .tocsn {
+  float: left;
+}
+
+#content .tocsr {
+  overflow: hidden;
+}
+
+#content #toc ol {
+  list-style-type: none;
+}
+
+#content #toc ol ol {
+  margin: 0 0 0 1em;
+}
+#content #doc,
+#content #toc {
+  margin: 0 1em 0 1em;
+}
+
+#content p { text-indent: 1em; }
+
+#content code { font-size: 120%; }
+
+#content pre code {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 100%;
+}
+
+@media screen and (min-width: 641px) {
+  #content #doc {
+    overflow: hidden;
+    max-width: 70%;
+  }
+}
+#content pre .field {
+  display:block;
+  margin: 1em 1em 0em 0em;
+}
+
+#content pre .field::after {
+  content: " :=";
+}
+#content pre code {
+  display: block;
+  margin: 1em;
+  padding: 1em;
+  border: solid 1px #aaa;
+}
+
+@media screen {
+  #content pre code {
+    background-color: AliceBlue;
+    overflow: auto;
+    max-height: 30em;
+  }
+}
+
+@media print {
+  #content pre {
+    page-break-inside: avoid;
+  }
+  #content pre code {
+    overflow: visible;
+    word-wrap: break-word;
+  }
+}
+@media screen {
+  #content .lang-js { background-color: ivory; }
+  #content .lang-md { background-color: lightyellow; }
+  #content .lang-html { background-color: floralwhite; }
+  #content .lang-json { background-color: honeydew; }
+  #content .lang-css { background-color: cornsilk; }
+  #content .lang-sh { background-color: lemonchiffon; }
+}
+#content h1,
+#content h2,
+#content h3,
+#content h4,
+#content h5,
+#content h6 {
+  margin: 0.5em 0em;
+  page-break-after: avoid
+}
+
+#content h1 { font-size: 140%; }
+#content h2 { font-size: 130%; }
+#content h3 { font-size: 120%; }
+#content h4,
+#content h5,
+#content h6 { font-size: 110%; }
+#content a:hover { color: #aaa; }
+
+#content a:visited,
+#content a { color: #000;}
+
+@media screen {
+  #content a {
+    text-decoration: underline;
+  }
+}
+
+@media print {
+  #content a {
+    text-decoration: none;
+  }
+  #content #doc a[href]:after {
+    content: " (" attr(href) ")";
+    font-size: 90%;
+  }
+}
+.hljs {
+    overflow: auto;
+    padding: 0.5em;
+    color: #333;
+}
+.hljs-comment, .diff .hljs-header, .hljs-javadoc {
+    color: #999;
+    font-style: italic;
+}
+.hljs-keyword, .css .rule .hljs-keyword, .hljs-winutils, .nginx .hljs-title,
+.hljs-subst, .hljs-request, .hljs-status {
+    color: #333;
+    font-weight: bold;
+}
+.hljs-number, .hljs-hexcolor, .ruby .hljs-constant {
+    color: #088;
+}
+.hljs-string, .hljs-tag .hljs-value, .hljs-phpdoc, .hljs-dartdoc, .tex .hljs-formula {
+    color: #d14;
+}
+.hljs-title, .hljs-id, .scss .hljs-preprocessor {
+    color: #900;
+    font-weight: bold;
+}
+.hljs-list .hljs-keyword, .hljs-subst {
+    font-weight: normal;
+}
+.hljs-class .hljs-title, .hljs-type, .vhdl .hljs-literal, .tex .hljs-command {
+    color: #458;
+    font-weight: bold;
+}
+.hljs-tag, .hljs-tag .hljs-title, .hljs-rules .hljs-property, .django .hljs-tag .hljs-keyword {
+    color: #000080;
+    font-weight: normal;
+}
+.hljs-attribute, .hljs-variable, .lisp .hljs-body {
+    color: #008080;
+}
+.hljs-regexp {
+    color: #009926;
+}
+.hljs-built_in {
+    color: #0086b3;
+}
+.hljs-symbol, .ruby .hljs-symbol .hljs-string, .lisp .hljs-keyword,
+.clojure .hljs-keyword, .scheme .hljs-keyword, .tex .hljs-special,
+.hljs-prompt {
+    color: #990073;
+}
+.hljs-preprocessor, .hljs-pragma, .hljs-pi, .hljs-doctype, .hljs-shebang,
+.hljs-cdata {
+    color: #999;
+    font-weight: bold;
+}
+.hljs-deletion {
+    background: #fdd;
+}
+.hljs-addition {
+    background: #dfd;
+}
+.diff .hljs-change {
+    background: #0086b3;
+}
+.hljs-chunk {
+    color: #aaa;
+}
+@media print {
+  .hljs {
+    overflow: visible;
+    word-wrap: break-word;
+  }
+  .hljs-number, .hljs-hexcolor, .ruby .hljs-constant {
+    color: #888;
+  }
+  .hljs-string, .hljs-tag .hljs-value, .hljs-phpdoc, .hljs-dartdoc, .tex .hljs-formula {
+    color: #ddd;
+  }
+  .hljs-title, .hljs-id, .scss .hljs-preprocessor {
+    color: #999;
+  }
+  .hljs-class .hljs-title, .hljs-type, .vhdl .hljs-literal, .tex .hljs-command {
+    color: #888;
+  }
+  .hljs-tag, .hljs-tag .hljs-title, .hljs-rules .hljs-property, .django .hljs-tag .hljs-keyword {
+    color: #888;
+  }
+  .hljs-attribute, .hljs-variable, .lisp .hljs-body {
+    color: #888;
+  }
+  .hljs-regexp {
+    color: #999;
+  }
+  .hljs-symbol, .ruby .hljs-symbol .hljs-string, .lisp .hljs-keyword,
+  .clojure .hljs-keyword, .scheme .hljs-keyword, .tex .hljs-special,
+  .hljs-prompt {
+    color: #999;
+  }
+  .hljs-built_in {
+    color: #888;
+  }
+  .hljs-deletion {
+    background: #ddd;
+  }
+  .hljs-addition {
+    background: #ddd;
+  }
+  .diff .hljs-change {
+    background: #888;
+  }
+}</style></head>
+<body><div id="content"><div id="title">pry</div><div id="tag">CouchApp Literate Programming</div><div id="toc"><h1>Contents</h1>
+<ol><li><div class="tocsn">1.&nbsp;</div><div class="tocsr"><a href="#introduction">Introduction</a></div>
+<li><div class="tocsn">2.&nbsp;</div><div class="tocsr"><a href="#couchdb-fields">CouchDB fields</a></div>
+<li><div class="tocsn">3.&nbsp;</div><div class="tocsr"><a href="#couchapp-fields">CouchApp fields</a></div>
+<li><div class="tocsn">4.&nbsp;</div><div class="tocsr"><a href="#program-structure">Program Structure</a></div>
+<li><div class="tocsn">5.&nbsp;</div><div class="tocsr"><a href="#editor">Editor</a></div>
+<ol><li><div class="tocsn">5.1&nbsp;</div><div class="tocsr"><a href="#html-layout">HTML layout</a></div>
+<li><div class="tocsn">5.2&nbsp;</div><div class="tocsr"><a href="#editor-stylesheet">Editor stylesheet</a></div>
+<li><div class="tocsn">5.3&nbsp;</div><div class="tocsr"><a href="#the-editor-javascript">The Editor javascript</a></div>
+<li><div class="tocsn">5.4&nbsp;</div><div class="tocsr"><a href="#update-document">Update document</a></div>
+<li><div class="tocsn">5.5&nbsp;</div><div class="tocsr"><a href="#main-module">Main module</a></div>
+</ol><li><div class="tocsn">6.&nbsp;</div><div class="tocsr"><a href="#html-layout">HTML layout</a></div>
+<li><div class="tocsn">7.&nbsp;</div><div class="tocsr"><a href="#html-stylesheet">HTML stylesheet</a></div>
+<ol><li><div class="tocsn">7.1&nbsp;</div><div class="tocsr"><a href="#vanilla-style">Vanilla style</a></div>
+<li><div class="tocsn">7.2&nbsp;</div><div class="tocsr"><a href="#preliminary-material">Preliminary Material</a></div>
+<li><div class="tocsn">7.3&nbsp;</div><div class="tocsr"><a href="#main-body">Main body</a></div>
+<li><div class="tocsn">7.4&nbsp;</div><div class="tocsr"><a href="#highlight-markup">Highlight markup</a></div>
+</ol><li><div class="tocsn">8.&nbsp;</div><div class="tocsr"><a href="#modules">Modules</a></div>
+<li><div class="tocsn">9.&nbsp;</div><div class="tocsr"><a href="#sharing-the-code">Sharing the Code</a></div>
+<li><div class="tocsn">10.&nbsp;</div><div class="tocsr"><a href="#final-thoughts">Final Thoughts</a></div></ol></div>
+<div id="doc"><h1 id="introduction">1. Introduction</h1>
+<p><a href="http://couchdb.apache.org">CouchDB</a> a database management system server
+that use HTTP and HTTPS protocols
+primarily to deliver <code>JSON</code> documents.
+<a href="http://docs.couchdb.org/en/latest/couchapp">CouchApp</a> a client-server application framework based
+on a Web browser front-end and a <code>CouchDB</code> back-end.</p>
+<p><code>pry</code> is a <code>CouchApp</code> that manages literate
+programs on <code>CouchDB</code>. It uses <a href="http://cygnyx.github.io/markover">markover</a>
+to &#39;tangle&#39; a <code>markdown</code> document into a <code>CouchApp</code> and &#39;weave&#39; it into
+a <code>HTML</code> document.
+From the same <a href="README.md">README.md</a>, it produces a <a href="README.json">README.json</a> 
+and a <a href="README.html">README.html</a>. <code>CouchDB</code> delivers a <a href=".">design document</a>
+that is very similar to the <code>README.json</code> file.</p>
+<p><code>pry</code> itself has a small API: for the source README and the derived <code>JSON</code> and
+<code>HTML</code> versions.
+In addition it implements an <a href="editor">editor</a>.
+The editor optionally takes a <code>id</code> argument with a path to the source
+document.</p>
+<p><code>pry</code> is a rudimentry deployment tool along the lines of
+<a href="http://kan.so">Kanso</a>, <a href="https://github.com/couchapp/couchapp">couchapp</a>, or
+<a href="https://github.com/nick-thompson/capp">capp</a>.</p>
+<p><code>pry</code> doesn&#39;t support attachments to documents. It only supports the creation
+of a <code>JSON</code> object (or document) which is deployed to the <code>CouchDB</code>.
+By convention, the source document is called <code>README.md</code> and it is included
+in the <code>JSON</code> document.
+This might be a little confusing at first.
+The important point is that you shouldn&#39;t create a <code>JSON</code> document with a
+field named <code>README.md</code> since this will be used by <code>pry</code> to store the source
+document (but it is possible to use a different field name).</p>
+<p>By default, <code>pry</code> operates on itself. In the editor, it will download the
+source document (in the <code>README.md</code> field) into a browser-based editor.
+You can modify <code>pry</code>, changing its documentation or source code in the editor.
+By changing the <code>_id</code> of the document, you can upload it to a different location.
+You can change the database used as well in the editor.</p>
+<p>Using the <code>id</code> parameter, <code>pry</code> will edit another source document
+by downloading its source document (in the <code>README.md</code> field) into the editor.</p>
+<p>For example, after opening the <code>pry</code> editor you can replace its contents with:</p>
+<pre><code>```#+_id
+foo
+```
+
+```#+history
+It is derived from fubar.
+```
+</code></pre><p>and upload this document. The resulting <code>JSON</code> object will have 3 fields: <code>_id</code>,
+<code>history</code>, and <code>README.md</code>. In the editor, these fields are visible in the <code>Source Code</code>
+tab. Then you can edit this document by passing in <code>?id=example/foo</code>.
+Recall that <code>markover</code> uses a <code>+</code> (plus sign) to indicate that a field should be quoted.
+You can create a new document by renaming the <code>_id</code> field to <code>bar</code> and uploading.</p>
+<p>You can change the source document name using the option <code>md</code> to the editor.
+For example, <code>?md=READMEFIRST.md</code> would look for the <code>READMEFIRST.md</code> field for
+the source document.</p>
+<h1 id="couchdb-fields">2. CouchDB fields</h1>
+<p>There is only one field that is require in CouchDB for every document: _id.
+This is the identifier that the JSON document is addressed by.
+In this case, <code>pry</code> is a design document:</p>
+<pre><div class="field">_id</div><code class="lang-json">_design/pry
+</code></pre>
+<h1 id="couchapp-fields">3. CouchApp fields</h1>
+<p>There are many optional fields used by a <code>CouchApp</code>, but
+<code>pry</code> is only using two fields: <code>rewrites</code> and <code>shows</code>.</p>
+<p>Rewrites are used to translate nice URLs into the URLs used internally.
+They are particularly useful when combined with a virtual host.
+For example, by creating a DNS for &#39;example&#39;, <code>CouchDB</code> can be
+configured to use the path &#39;/example/_design/pry/_rewrite&#39;.
+Then URLs like &#39;<a href="http://example/README.html">http://example/README.html</a>&#39; are translated to
+&#39;<a href="http://example/example/_design/pry/_rewrite/README.html">http://example/example/_design/pry/_rewrite/README.html</a>&#39;.
+Note that it is difficult to use <code>pry</code> with virtually hosts.
+You are better off using the real hostname.</p>
+<p>This represents the entire API for <code>pry</code>.</p>
+<pre><div class="field">rewrites</div><code class="lang-json">[
+   {
+       "<span class="hljs-attribute">from</span>": <span class="hljs-value"><span class="hljs-string">""</span></span>,
+       "<span class="hljs-attribute">to</span>": <span class="hljs-value"><span class="hljs-string">"."</span>
+   </span>},
+   {
+       "<span class="hljs-attribute">from</span>": <span class="hljs-value"><span class="hljs-string">"/README.html"</span></span>,
+       "<span class="hljs-attribute">to</span>": <span class="hljs-value"><span class="hljs-string">"_show/README.html"</span>
+   </span>},
+   {
+       "<span class="hljs-attribute">from</span>": <span class="hljs-value"><span class="hljs-string">"/README.md"</span></span>,
+       "<span class="hljs-attribute">to</span>": <span class="hljs-value"><span class="hljs-string">"_show/README.md"</span>
+   </span>},
+   {
+       "<span class="hljs-attribute">from</span>": <span class="hljs-value"><span class="hljs-string">"/README.json"</span></span>,
+       "<span class="hljs-attribute">to</span>": <span class="hljs-value"><span class="hljs-string">"_show/README.json"</span>
+   </span>},
+   {
+       "<span class="hljs-attribute">from</span>": <span class="hljs-value"><span class="hljs-string">"editor"</span></span>,
+       "<span class="hljs-attribute">to</span>": <span class="hljs-value"><span class="hljs-string">"_show/editor"</span>
+   </span>},
+   {
+       "<span class="hljs-attribute">from</span>": <span class="hljs-value"><span class="hljs-string">"*"</span></span>,
+       "<span class="hljs-attribute">to</span>": <span class="hljs-value"><span class="hljs-string">"_show/404"</span>
+   </span>}
+]
+</code></pre>
+<p>The first URL returns a <code>JSON</code> object of the <code>pry</code> design document.
+The other URLs are converted into show function calls.</p>
+<p>CouchApps have limited support for javascript.
+The <code>shows</code> object is one of the places where you can embed
+anonymous javascript functions in a string.
+Each function has 2 arguments: the document and the request.
+Since they are embedded in strings it is easier to implement
+the details in another functions.
+But the other functions must be contained within a <code>CommonJS</code> module.
+In this case the module &#39;main&#39; is used.
+These anonymous rewrite functions tend to be one-liners.</p>
+<pre><div class="field">shows</div><code class="lang-json">{
+   "<span class="hljs-attribute">404</span>": <span class="hljs-value"><span class="hljs-string">"function(doc, req){ return {body: '&lt;h1&gt;404 - Document not found&lt;/h1&gt;\\n'}, headers: {'Content-Type': 'text/html'}}}"</span></span>,
+   "<span class="hljs-attribute">editor</span>": <span class="hljs-value"><span class="hljs-string">"function(doc, req){ return {body: require('main').edit.call(this, req), headers: {'Content-Type': 'text/html'}}}"</span></span>,
+   "<span class="hljs-attribute">README.md</span>": <span class="hljs-value"><span class="hljs-string">"function(doc, req){ return {body: this['README.md'], headers: {'Content-Type': 'text/markdown'}}}"</span></span>,
+   "<span class="hljs-attribute">README.html</span>": <span class="hljs-value"><span class="hljs-string">"function(doc, req){ return {body: require('main').weave.call(this), headers: {'Content-Type': 'text/html'}}}"</span></span>,
+   "<span class="hljs-attribute">README.json</span>": <span class="hljs-value"><span class="hljs-string">"function(doc, req){ return {body: require('main').tangle.call(this), headers: {'Content-Type': 'text/plain'}}}"</span>
+</span>}
+</code></pre>
+<h1 id="program-structure">4. Program Structure</h1>
+<p><code>pry</code> relies on <code>markover</code> for document processing, which relies on <code>marked</code>
+and <code>highlight.js</code>. The editor in <code>pry</code> is implemented in the Web browser (of course).
+So there are some challenges to constructing an application (<code>pry</code>) in the CouchDB environment
+that will serve up another application (the editor) in the Web browser environment.
+The main issues revolve around special characters and strings that are not allowed
+in certain situations.</p>
+<h1 id="editor">5. Editor</h1>
+<p>The <code>pry</code> editor is a meta-level HTML document. That is, in this document
+we are writing the code that will delivered to the Web browser that will
+provide the editor for the document.</p>
+<h2 id="html-layout">5.1 HTML layout</h2>
+<p>The editor is an HTML document with 4 tabs.</p>
+<pre><div class="field">editorcontent</div><code class="lang-js">&lt;ul <span class="hljs-keyword">class</span>=<span class="hljs-string">'tabs'</span>&gt;
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">'#tab1'</span>&gt;</span>Document<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">'#tab2'</span>&gt;</span>Source Code<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">'#tab3'</span>&gt;</span>HTML<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">'#tab4'</span>&gt;</span>Update<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">'display'</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">'tab1'</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text"</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">'_src'</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">''</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">input</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">textarea</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">'_editor'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">textarea</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">'tab2'</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">'_code'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">'tab3'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">'tab4'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span></span>
+</code></pre>
+<h2 id="editor-stylesheet">5.2 Editor stylesheet</h2>
+<p>The editor needs its own stylesheet.</p>
+<p>First, reset the stylesheet.</p>
+<pre><div class="field">editorstyle</div><code class="lang-css"><span class="hljs-tag">html</span>, <span class="hljs-tag">body</span>, <span class="hljs-tag">div</span>, <span class="hljs-tag">span</span>, <span class="hljs-tag">object</span>, <span class="hljs-tag">iframe</span>, <span class="hljs-tag">h1</span>, <span class="hljs-tag">h2</span>, <span class="hljs-tag">h3</span>, <span class="hljs-tag">h4</span>, <span class="hljs-tag">h5</span>, <span class="hljs-tag">h6</span>, <span class="hljs-tag">p</span>, <span class="hljs-tag">blockquote</span>, <span class="hljs-tag">pre</span>,
+<span class="hljs-tag">abbr</span>, <span class="hljs-tag">address</span>, <span class="hljs-tag">cite</span>, <span class="hljs-tag">code</span>, <span class="hljs-tag">del</span>, <span class="hljs-tag">dfn</span>, <span class="hljs-tag">em</span>, <span class="hljs-tag">img</span>, <span class="hljs-tag">ins</span>, <span class="hljs-tag">kbd</span>, <span class="hljs-tag">q</span>, <span class="hljs-tag">samp</span>,
+<span class="hljs-tag">small</span>, <span class="hljs-tag">strong</span>, <span class="hljs-tag">sub</span>, <span class="hljs-tag">sup</span>, <span class="hljs-tag">var</span>, <span class="hljs-tag">b</span>, <span class="hljs-tag">i</span>, <span class="hljs-tag">dl</span>, <span class="hljs-tag">dt</span>, <span class="hljs-tag">dd</span>, <span class="hljs-tag">ol</span>, <span class="hljs-tag">ul</span>, <span class="hljs-tag">li</span>, <span class="hljs-tag">a</span>, <span class="hljs-tag">textarea</span>, <span class="hljs-tag">input</span>,
+<span class="hljs-tag">fieldset</span>, <span class="hljs-tag">form</span>, <span class="hljs-tag">label</span>, <span class="hljs-tag">legend</span>, <span class="hljs-tag">table</span>, <span class="hljs-tag">caption</span>, <span class="hljs-tag">tbody</span>, <span class="hljs-tag">tfoot</span>, <span class="hljs-tag">thead</span>, <span class="hljs-tag">tr</span>, <span class="hljs-tag">th</span>, <span class="hljs-tag">td</span>,
+<span class="hljs-tag">article</span>, <span class="hljs-tag">aside</span>, <span class="hljs-tag">canvas</span>, <span class="hljs-tag">details</span>, <span class="hljs-tag">figcaption</span>, <span class="hljs-tag">figure</span>,
+<span class="hljs-tag">footer</span>, <span class="hljs-tag">header</span>, <span class="hljs-tag">hgroup</span>, <span class="hljs-tag">menu</span>, <span class="hljs-tag">nav</span>, <span class="hljs-tag">section</span>, <span class="hljs-tag">summary</span>, <span class="hljs-tag">time</span>, <span class="hljs-tag">mark</span>, <span class="hljs-tag">audio</span>, <span class="hljs-tag">video</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> block</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">outline</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">line-height</span>:<span class="hljs-value"> <span class="hljs-number">140%</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> inherit</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> black</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">vertical-align</span>:<span class="hljs-value"> baseline</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">text-decoration</span>:<span class="hljs-value"> none</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> transparent</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-tag">a</span>, <span class="hljs-tag">code</span>, <span class="hljs-tag">span</span>, <span class="hljs-tag">b</span>, <span class="hljs-tag">i</span>, <span class="hljs-tag">em</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> inline</span></span>; <span class="hljs-rule">}</span></span>
+
+<span class="hljs-tag">body</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">100%</span></span></span>;
+<span class="hljs-rule">}</span></span>
+</code></pre>
+<p>Highlight active elements in the interface.</p>
+<pre><div class="field">editorstyle</div><code class="lang-css"><span class="hljs-id">#tab1</span> <span class="hljs-id">#_src</span>, <span class="hljs-id">#tab1</span> <span class="hljs-id">#_editor</span>, <span class="hljs-class">.tabs</span> <span class="hljs-tag">li</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> solid black <span class="hljs-number">1px</span></span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.tabs</span> <span class="hljs-tag">li</span><span class="hljs-pseudo">:hover</span>, <span class="hljs-id">#tab1</span> <span class="hljs-id">#_editor</span><span class="hljs-pseudo">:focus</span>, <span class="hljs-id">#tab1</span> <span class="hljs-id">#_src</span><span class="hljs-pseudo">:focus</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> solid orange <span class="hljs-number">1px</span></span></span>;
+<span class="hljs-rule">}</span></span>
+</code></pre>
+<p>For the coding environment, use a monospace type.
+Set up the tabs with the same margins.</p>
+<pre><div class="field">editorstyle</div><code class="lang-css"><span class="hljs-class">.display</span>, <span class="hljs-class">.tabs</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">0.4em</span></span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-id">#tab1</span> <span class="hljs-id">#_editor</span>, <span class="hljs-id">#tab1</span> <span class="hljs-id">#_src</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">width</span>:<span class="hljs-value"> <span class="hljs-number">99%</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">font-family</span>:<span class="hljs-value"> Courier, monospace</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">0.5%</span></span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-id">#tab1</span> <span class="hljs-id">#_editor</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">resize</span>:<span class="hljs-value"> none</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">height</span>:<span class="hljs-value"> <span class="hljs-number">40em</span></span></span>;
+<span class="hljs-rule">}</span></span>
+</code></pre>
+<p>Configure the layout of the menu.</p>
+<pre><div class="field">editorstyle</div><code class="lang-css"><span class="hljs-class">.tabs</span> <span class="hljs-tag">li</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">list-style</span>:<span class="hljs-value"> none</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> inline</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">0.4em</span></span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.tabs</span> <span class="hljs-tag">a</span>, <span class="hljs-class">.tabs</span> <span class="hljs-tag">input</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> inline-block</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> gray</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-class">.tabs</span> <span class="hljs-tag">a</span><span class="hljs-class">.active</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> black</span></span>;
+<span class="hljs-rule">}</span></span>
+</code></pre>
+<p>For the source code tab show the formatted output.</p>
+<pre><div class="field">editorstyle</div><code class="lang-css"><span class="hljs-class">.display</span> <span class="hljs-id">#_code</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">white-space</span>:<span class="hljs-value"> pre</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">overflow</span>:<span class="hljs-value"> visible</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">word-wrap</span>:<span class="hljs-value"> break-word</span></span>;
+<span class="hljs-rule">}</span></span>
+</code></pre>
+<p>Hide the menu when printing.</p>
+<pre><div class="field">editorstyle</div><code class="lang-css">
+<span class="hljs-at_rule">@<span class="hljs-keyword">media</span> print </span>{
+  <span class="hljs-class">.tabs</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> none</span></span>;
+  <span class="hljs-rule">}</span></span>
+}
+</code></pre>
+<h2 id="the-editor-javascript">5.3 The Editor javascript</h2>
+<p>After the document is loaded, insert the source into the editor
+and configure the tabs.
+The source location is initialized as an absolute path on
+the couchdb host, not a virtual host.</p>
+<p>Tangle and weave can take a significant amount of time.
+The <code>longwait</code> function is called after the document is modified
+and the user has stopped typing. In the first pass it handles
+the 2nd tab and in the second pass it handles the 3rd tab.
+A short timeout is used between passes to allow for user
+interactions to update. Perhaps this could be implemented in a
+worker process instead of the main thread. The delay time
+is estimated from the previous runtime.</p>
+<pre><div class="field">editorscript</div><code class="lang-js"><span class="hljs-keyword">var</span> tab2todo = <span class="hljs-literal">true</span>
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">longwait</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">var</span> st = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()
+  <span class="hljs-keyword">if</span> (tab2todo) {
+    setuptab2()
+    <span class="hljs-keyword">this</span>.timeout = setTimeout(longwait, <span class="hljs-number">50</span>)
+  } <span class="hljs-keyword">else</span> {
+    setuptab3()
+  }
+  tab2todo = !tab2todo
+  <span class="hljs-keyword">var</span> ms = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>() - st
+  <span class="hljs-keyword">if</span> (ms &lt; <span class="hljs-number">500</span>) ms = <span class="hljs-number">500</span>
+  <span class="hljs-keyword">this</span>.delay = <span class="hljs-number">2</span> * ms
+}
+</code></pre>
+<p>Getting and putting documents happens asynchronously.
+Usually the time gaps are not too significant between
+the request and the delivery of a result.</p>
+<p>When the document is available <code>putDoc1</code> initializes
+the editor. <code>putDoc</code> is called when the document has
+been delivered.</p>
+<pre><div class="field">editorscript</div><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">putDoc1</span><span class="hljs-params">(md)</span> </span>{
+  $(<span class="hljs-string">"#_editor"</span>).text(md)
+  setuptab1()
+  <span class="hljs-keyword">this</span>.timeout = setTimeout(longwait, <span class="hljs-number">50</span>)
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">putDoc</span><span class="hljs-params">(errflag, md)</span> </span>{
+  <span class="hljs-keyword">if</span> (errflag)
+    md = <span class="hljs-string">''</span>
+  <span class="hljs-keyword">else</span>
+    md = md[mdref]
+  putDoc1(md)
+}
+</code></pre>
+<p><code>makeurl</code> adds server location information to a path.</p>
+<pre><div class="field">editorscript</div><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">makeurl</span><span class="hljs-params">(path)</span> </span>{
+  <span class="hljs-keyword">return</span> location.protocol + <span class="hljs-string">'//'</span> + location.host + <span class="hljs-string">'/'</span> + path
+}
+</code></pre>
+<p>This is called when the document is loaded.
+It installs a timeout on the keyup event in the editor,
+records the path to the source document,
+and gets the source document.
+The source document is either pre-downloaded or
+we have to get it.</p>
+<pre><div class="field">editorscript</div><code class="lang-js">$(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+  $(<span class="hljs-string">"#_editor"</span>).keyup(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.timeout) clearTimeout(<span class="hljs-keyword">this</span>.timeout)
+    tab2todo = <span class="hljs-literal">true</span>
+    <span class="hljs-keyword">this</span>.timeout = setTimeout(longwait, <span class="hljs-keyword">this</span>.delay || <span class="hljs-number">1000</span>)
+  })
+  $(<span class="hljs-string">"#_src"</span>).val(mddb)
+  markover = <span class="hljs-built_in">require</span>(<span class="hljs-string">'markover'</span>)
+
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> md == <span class="hljs-string">"undefined"</span>) {
+    <span class="hljs-keyword">var</span> url = makeurl(mddb)
+    getDocument(url, putDoc)
+  } <span class="hljs-keyword">else</span>
+    putDoc1(md)
+})
+</code></pre>
+<p>In HTML documents the processing of &#39;&amp;&#39; and &#39;&lt;&#39; characters is tricky.
+This function handles HTML escapes codes.</p>
+<pre><div class="field">editorscript</div><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">escape</span><span class="hljs-params">(str)</span> </span>{
+  <span class="hljs-keyword">return</span> str
+    .replace(<span class="hljs-regexp">/&amp;/g</span>, <span class="hljs-string">''</span>)
+    .replace(<span class="hljs-regexp">/&lt;/g</span>, <span class="hljs-string">'&lt;'</span>)
+    .replace(<span class="hljs-regexp">/&gt;/g</span>, <span class="hljs-string">'&gt;'</span>)
+}
+</code></pre>
+<p>Tangle the HTML editor element</p>
+<pre><div class="field">editorscript</div><code class="lang-js"><span class="hljs-keyword">var</span> markover
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">tangleDoc</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">var</span> src = $(<span class="hljs-string">'#_editor'</span>)[<span class="hljs-number">0</span>].value
+  <span class="hljs-keyword">var</span> el = $(<span class="hljs-string">'#_code'</span>)
+  <span class="hljs-keyword">var</span> res
+  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> mdref == <span class="hljs-string">"undefined"</span> || mdref == <span class="hljs-string">""</span>)
+    res = markover.tangleJSON(src)
+  <span class="hljs-keyword">else</span>
+    res = markover.tangleJSON(src, {sourcetarget: mdref})
+  <span class="hljs-keyword">return</span> res
+}
+</code></pre>
+<p>Functions to set up the tabs.</p>
+<pre><div class="field">editorscript</div><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setuptab1</span><span class="hljs-params">()</span> </span>{
+  $(<span class="hljs-string">"#_editor"</span>)[<span class="hljs-number">0</span>].focus()
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setuptab2</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">var</span> el = $(<span class="hljs-string">'#_code'</span>)
+  <span class="hljs-keyword">var</span> txt = tangleDoc()
+  el.text(txt)
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setuptab3</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">var</span> src = $(<span class="hljs-string">'#_editor'</span>)[<span class="hljs-number">0</span>].value
+  <span class="hljs-keyword">var</span> el = $(<span class="hljs-string">'#tab3'</span>)
+  <span class="hljs-keyword">var</span> txt = markover.weaveJSON(src, {contentonly: <span class="hljs-literal">true</span>})
+  el.html(txt)
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setuptab4</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">var</span> src = $(<span class="hljs-string">'#_editor'</span>)[<span class="hljs-number">0</span>].value
+  <span class="hljs-keyword">var</span> url = $(<span class="hljs-string">'#_src'</span>)[<span class="hljs-number">0</span>].value.split(<span class="hljs-string">'/'</span>)
+  url = url[<span class="hljs-number">0</span>]
+  <span class="hljs-keyword">var</span> txt = tangleDoc()
+  <span class="hljs-keyword">var</span> json = <span class="hljs-built_in">JSON</span>.parse(txt)
+  <span class="hljs-keyword">var</span> id = json._id
+  json[mdref] = src
+  url = [url, id].join(<span class="hljs-string">'/'</span>)
+  $(<span class="hljs-string">'#tab4'</span>).html(<span class="hljs-string">'&lt;/h1&gt;Updating '</span> + id + <span class="hljs-string">'&lt;/h1&gt;'</span>)
+  url = makeurl(url)
+  updatedoc(url, json)
+}
+
+<span class="hljs-keyword">var</span> editfunction = {
+  tab1: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{setuptab1()},
+  tab4: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{setuptab4()}
+}
+</code></pre>
+<p>Set up the menus to show the active tab.
+Install the onclick event handler to switch tabs.</p>
+<pre><div class="field">editorscript</div><code class="lang-js">$(<span class="hljs-string">'ul.tabs'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+  <span class="hljs-keyword">var</span> active, content, links = $(<span class="hljs-keyword">this</span>).find(<span class="hljs-string">'a'</span>), inputs = $(<span class="hljs-keyword">this</span>).find(<span class="hljs-string">'input'</span>)
+
+  active = $(links[<span class="hljs-number">0</span>])
+  active.addClass(<span class="hljs-string">'active'</span>)
+
+  content = $(active[<span class="hljs-number">0</span>].hash)
+
+  links.not(active).each(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+    $(<span class="hljs-keyword">this</span>.hash).hide()
+  })
+
+  $(<span class="hljs-keyword">this</span>).on(<span class="hljs-string">'click'</span>, <span class="hljs-string">'a'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span></span>{
+    active.removeClass(<span class="hljs-string">'active'</span>)
+    content.hide()
+
+    active = $(<span class="hljs-keyword">this</span>)
+    content = $(<span class="hljs-keyword">this</span>.hash)
+
+    active.addClass(<span class="hljs-string">'active'</span>)
+
+    <span class="hljs-keyword">var</span> f = editfunction[<span class="hljs-keyword">this</span>.hash.substring(<span class="hljs-number">1</span>)]
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> f !== <span class="hljs-string">"undefined"</span>) {
+       f()
+    }
+    content.show()
+
+    e.preventDefault()
+  })
+})
+</code></pre>
+<p>Quick and dirty implementation of <code>CommonJS</code> <code>require</code> function.
+If a <code>name</code> has been loaded, it is returned.
+The loading of the modules is described below.</p>
+<pre><div class="field">editorscript</div><code class="lang-js"><span class="hljs-keyword">var</span> <span class="hljs-built_in">require</span> = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">require</span><span class="hljs-params">(name)</span> </span>{
+  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">require</span>.loaded[name])
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">require</span>.loaded[name]
+  <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"module missing:"</span> + name)
+}
+<span class="hljs-built_in">require</span>.loaded = {}
+</code></pre>
+<h2 id="update-document">5.4 Update document</h2>
+<p>Before a document can be updated, the revision
+of the current document is needed.</p>
+<p>Perhaps the revision could be reported by the server,
+but for now we simply get the current version from the server.</p>
+<p>This function gets a document from a CouchDB server
+and calls the callback function with the errflag,
+the JSON response, the URL and some other data.</p>
+<pre><div class="field">editorscript</div><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getDocument</span><span class="hljs-params">(url, cb, data)</span> </span>{
+  $.ajax({
+    url: url,
+    dataType: <span class="hljs-string">'json'</span>
+  })
+  .done(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d, s, x)</span> </span>{
+    cb(<span class="hljs-literal">false</span>, x.responseJSON, url, data)
+  })
+  .fail(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, s, e)</span> </span>{
+    cb(<span class="hljs-literal">true</span>, x.responseJSON, url, data)
+  })
+}
+</code></pre>
+<p>Similarly, this function puts a document to a CouchDB server,
+calling the callback function with the errflag, and the JSON response.</p>
+<pre><div class="field">editorscript</div><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">putDocument</span><span class="hljs-params">(url, doc, cb)</span> </span>{
+  $.ajax({
+    url: url,
+    type: <span class="hljs-string">'PUT'</span>,
+    data: <span class="hljs-built_in">JSON</span>.stringify(doc),
+    contentType: <span class="hljs-string">'application/json'</span>,
+    dataType: <span class="hljs-string">'json'</span>
+  })
+  .done(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d, s, x)</span> </span>{
+    cb(<span class="hljs-literal">false</span>, x.responseJSON)
+  })
+  .fail(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(x, s, e)</span> </span>{
+    cb(<span class="hljs-literal">true</span>, x.responseJSON)
+  })
+}
+</code></pre>
+<p>Updating a document happens through a series of
+asynchronous calls. The first step is to get the
+current version of the document.</p>
+<pre><div class="field">editorscript</div><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updatedoc</span><span class="hljs-params">(url, json)</span> </span>{
+  getDocument(url, updatedoc1, json)
+}
+</code></pre>
+<p>If there isn&#39;t a current document, assume that
+a new document is being created, otherwise
+add the revision number to the new version of
+the document.</p>
+<pre><div class="field">editorscript</div><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updatedoc1</span><span class="hljs-params">(errflag, resp, url, doc)</span> </span>{
+  <span class="hljs-keyword">var</span> rev
+  <span class="hljs-keyword">var</span> doit = <span class="hljs-literal">false</span>
+  <span class="hljs-keyword">var</span> err
+  <span class="hljs-keyword">if</span> (errflag) {
+    <span class="hljs-keyword">if</span> (resp) {
+      err = resp.error
+      doit = resp.error == <span class="hljs-string">"not_found"</span>
+    } <span class="hljs-keyword">else</span> {
+      doit = <span class="hljs-literal">true</span>
+    }
+  } <span class="hljs-keyword">else</span> {
+    doit = <span class="hljs-literal">true</span>
+    doc._rev = resp._rev
+  }
+  <span class="hljs-keyword">if</span> (!doit)
+    $(<span class="hljs-string">'#tab4'</span>).html(<span class="hljs-string">'&lt;/h1&gt;Update Error: '</span> + (err || <span class="hljs-string">"unknown"</span>) + <span class="hljs-string">'&lt;/h1&gt;'</span>)
+  <span class="hljs-keyword">else</span> {
+    $(<span class="hljs-string">'#tab4'</span>).html(<span class="hljs-string">'&lt;/h1&gt;Updating '</span> + url + <span class="hljs-string">'&lt;/h1&gt;'</span>)
+    putDocument(url, doc, updatedocwithrev)
+  }
+}
+</code></pre>
+<p>Now the put worked or it didn&#39;t. Report the result.</p>
+<pre><div class="field">editorscript</div><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">updatedocwithrev</span><span class="hljs-params">(errflag, doc)</span> </span>{
+  <span class="hljs-keyword">if</span> (errflag)
+    $(<span class="hljs-string">'#tab4'</span>).html(<span class="hljs-string">'&lt;/h1&gt;Update Error: '</span> + <span class="hljs-string">"unknown"</span> + <span class="hljs-string">'&lt;/h1&gt;'</span>)
+  <span class="hljs-keyword">else</span>
+    $(<span class="hljs-string">'#tab4'</span>).html(<span class="hljs-string">'&lt;/h1&gt;Updated '</span> + doc.id + <span class="hljs-string">' to revision '</span> + doc.rev + <span class="hljs-string">'&lt;/h1&gt;'</span>)
+}
+</code></pre>
+<h2 id="main-module">5.5 Main module</h2>
+<p>The main module implements the functionality of <code>pry</code>.</p>
+<pre><div class="field">main</div><code class="lang-js">!(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+
+<span class="hljs-keyword">var</span> markover = <span class="hljs-built_in">require</span>(<span class="hljs-string">'markover'</span>)
+
+<span class="hljs-keyword">var</span> main = {
+</code></pre>
+<p>First tangle and weave are handled.
+These operations happen on the server side
+and are unrelated to the editor.</p>
+<pre><div class="field">main</div><code class="lang-js">  weave: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> markover.weaveJSON(<span class="hljs-keyword">this</span>[<span class="hljs-string">'README.md'</span>])
+  },
+  tangle: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-keyword">return</span> markover.tangleJSON(<span class="hljs-keyword">this</span>[<span class="hljs-string">'README.md'</span>], {sourcetarget: <span class="hljs-string">'README.md'</span>})
+  },
+</code></pre>
+<p>The &#39;&lt;/script&gt;&#39; tag needs special handling here. It isn&#39;t allowed inside a string
+within a javascript block. 
+The &#39;fixup&#39; function replaces &#39;&lt;/script&gt;&#39; with &#39;&lt;&amp;#&#39; and &#39;47;script&gt;&#39; combined,
+but the script block delimiters
+in the &#39;edit&#39; function should <em>not</em> be replaced, and they use &#39;&lt;/&#39;+&#39;script&gt;&#39;.</p>
+<pre><div class="field">main</div><code class="lang-js">  fixup: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(str)</span> </span>{
+    <span class="hljs-keyword">return</span> str.replace(<span class="hljs-regexp">/&lt;\/script&gt;/gm</span>, <span class="hljs-string">'&lt;&amp;#'</span>+<span class="hljs-string">'47;script&gt;'</span>)
+  },
+</code></pre>
+<p>Regular multiline text is encoded in JSON strings.
+Special characters are mapped to escape codes.</p>
+<pre><div class="field">main</div><code class="lang-js">  quotestring: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(code)</span> </span>{
+    <span class="hljs-keyword">return</span> (<span class="hljs-string">'"'</span> +
+      code
+        .replace(<span class="hljs-regexp">/\\/gm</span>, <span class="hljs-string">'\\\\'</span>)
+        .replace(<span class="hljs-regexp">/\"/gm</span> <span class="hljs-comment">/*"*/</span>, <span class="hljs-string">'\\"'</span>)
+        .replace(<span class="hljs-regexp">/\n/gm</span> , <span class="hljs-string">'\\n'</span>)
+        .replace(<span class="hljs-regexp">/\t/gm</span> , <span class="hljs-string">'\\t'</span>)
+      + <span class="hljs-string">'"'</span>)
+  },
+</code></pre>
+<p>Produce the HTML edit document.
+First get the encoded source document.
+Note that &#39;fixup&#39; runs on this document,
+so any reference to &#39;&lt;/script&gt;&#39; must be handled with care.</p>
+<pre><div class="field">main</div><code class="lang-js">  edit: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(req)</span> </span>{
+    <span class="hljs-keyword">var</span> mdref = <span class="hljs-string">'README.md'</span>
+    <span class="hljs-keyword">var</span> p = req.path
+    <span class="hljs-keyword">var</span> mddb = p.slice(<span class="hljs-number">0</span>,<span class="hljs-number">3</span>).join(<span class="hljs-string">'/'</span>)
+    <span class="hljs-keyword">var</span> src
+    <span class="hljs-keyword">if</span> (req.query.md) {
+      mdref = req.query.md
+    }
+    <span class="hljs-keyword">if</span> (req.query.id) {
+      mddb = req.query.id
+    } <span class="hljs-keyword">else</span>
+      src = main.quotestring(main.fixup(<span class="hljs-keyword">this</span>[mdref]))
+    <span class="hljs-keyword">var</span> buf = []
+</code></pre>
+<p>The editor header material</p>
+<pre><div class="field">edithead</div><code class="lang-js">&lt;!DOCTYPE html&gt;<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">html</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">"utf-8"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">http-equiv</span>=<span class="hljs-value">"Content-Language"</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">"en"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"viewport"</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">"initial-scale=1"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Editor<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">style</span>&gt;</span><span class="css"></span></span>
+</code></pre>
+<p>Push the header material, the style and
+additional script references.
+Note the handling of the &lt;/script&gt; tag.</p>
+<pre><div class="field">main</div><code class="lang-js">    buf.push(<span class="hljs-keyword">this</span>.edithead)
+    buf.push(<span class="hljs-keyword">this</span>.editorstyle)
+    buf.push(<span class="hljs-string">'&lt;/style&gt;'</span>); <span class="hljs-comment">// syntax help</span>
+
+    [<span class="hljs-string">'https://code.jquery.com/jquery-2.1.3.min.js'</span>].forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span></span>{
+      buf.push(<span class="hljs-string">'&lt;script type="text/javascript" src="'</span>+e+<span class="hljs-string">'"&gt;&lt;/'</span>+<span class="hljs-string">'script&gt;'</span>)
+    })
+
+    buf.push(<span class="hljs-string">"&lt;/head&gt;&lt;body&gt;"</span>)
+    buf.push(<span class="hljs-keyword">this</span>.editorcontent)
+    buf.push(<span class="hljs-string">"&lt;/body&gt;&lt;/html&gt;"</span>)
+</code></pre>
+<p>After the document the on-the-fly script is included.
+First record the location of the source document, its contents
+and the basic edit scripts.</p>
+<pre><div class="field">main</div><code class="lang-js">    buf.push(<span class="hljs-string">'&lt;script type="text/javascript"&gt;'</span>)
+    buf.push(<span class="hljs-string">'var mdref = "'</span> + mdref + <span class="hljs-string">'"'</span>)
+    buf.push(<span class="hljs-string">'var mddb = "'</span> + mddb + <span class="hljs-string">'"'</span>)
+    buf.push(<span class="hljs-string">'var md '</span> + (src ? (<span class="hljs-string">' = '</span> + src) : <span class="hljs-string">''</span>))
+    buf.push(<span class="hljs-keyword">this</span>.editorscript)
+    <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>
+</code></pre>
+<p>This is my quick and dirty implementation of pre-loaded <code>CommonJS</code>
+modules.
+The modules are assumed to exist in the design document, <code>self</code>.
+An initial list of modules is set in <code>incs</code>.
+For each module, check if it hasn&#39;t been loaded.
+If not, then statically scan the module code and push
+any dependent modules onto <code>incs</code>.
+Module names and contents are pushed into <code>mods</code></p>
+<pre><div class="field">main</div><code class="lang-js">    <span class="hljs-keyword">var</span> incs = [<span class="hljs-string">"markover"</span>]
+    <span class="hljs-keyword">var</span> e
+    <span class="hljs-keyword">var</span> r
+    <span class="hljs-keyword">var</span> i
+    <span class="hljs-keyword">var</span> exports = {}
+    <span class="hljs-keyword">var</span> mods = []
+
+    <span class="hljs-keyword">for</span>(i = <span class="hljs-number">0</span>; i &lt; incs.length; i++) {
+      e = incs[i]
+      <span class="hljs-keyword">if</span> (exports[e] == <span class="hljs-literal">undefined</span> &amp;&amp; self[e] != <span class="hljs-literal">undefined</span>) {
+        main.scanrequire(incs, self[e])
+        <span class="hljs-keyword">if</span> (self[e] != <span class="hljs-literal">null</span>) {
+          mods.push([e, self[e]])
+          exports[e] = <span class="hljs-literal">true</span>
+        }
+      }
+    }
+</code></pre>
+<p>Process <code>mods</code> in reverse order. All dependent modules
+should be loaded before the requiring module.
+Initialize a empty <code>module</code> and <code>exports</code>.
+Wrap the module code in a function with arguments
+of <code>module</code>, <code>exports</code>, and <code>require</code>.
+Call the wrap function with the prepared arguments.
+Check for non-empty results and store it in <code>loaded</code>.
+Clean up temporary objects.</p>
+<p>This should work for modules that are not mutually dependent.</p>
+<p>An alternative implementation would be to put a default value
+for all modules that are in <code>mods</code> into require.loaded and
+then update the values as they get loaded. May be the default
+value would be a function that would return the real object
+after it has actually been loaded.</p>
+<pre><div class="field">main</div><code class="lang-js">    i = mods.length
+    <span class="hljs-keyword">while</span> ( (--i) &gt;= <span class="hljs-number">0</span>) {
+      e = mods[i][<span class="hljs-number">0</span>]
+      r = mods[i][<span class="hljs-number">1</span>]
+      buf.push(<span class="hljs-string">'require.module = {}'</span>)
+      buf.push(<span class="hljs-string">'require.exports = {}'</span>)
+      buf.push(<span class="hljs-string">"require.loading = function (module, exports, require) {"</span>)
+      buf.push(main.fixup(r))
+      buf.push(<span class="hljs-string">"}"</span>)
+      buf.push(<span class="hljs-string">"require.loading(require.module, require.exports, require)"</span>)
+      buf.push(<span class="hljs-string">'if (typeof require.module.exports == "undefined") require.module.exports = require.exports'</span>)
+      buf.push(<span class="hljs-string">'require.loaded["'</span> + e + <span class="hljs-string">'"] = require.module.exports'</span>)
+      buf.push(<span class="hljs-string">'delete require.module.exports'</span>)
+    }
+</code></pre>
+<p>The final step is some clean and closing the script.
+Note the &#39;&lt;/script&gt;&#39; handling.</p>
+<pre><div class="field">main</div><code class="lang-js">    buf.push(<span class="hljs-string">'delete require.loading'</span>)
+    buf.push(<span class="hljs-string">'delete require.module'</span>)
+    buf.push(<span class="hljs-string">'delete require.exports'</span>)
+    buf.push(<span class="hljs-string">'&lt;/'</span>+<span class="hljs-string">'script&gt;'</span>)
+    buf.push(<span class="hljs-string">""</span>)
+    <span class="hljs-keyword">return</span> buf.join(<span class="hljs-string">'\n'</span>)
+  },
+</code></pre>
+<p><code>scanrequire</code> statically looks for module names</p>
+<pre><div class="field">main</div><code class="lang-js">  scanrequire: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(incs, str)</span> </span>{
+    <span class="hljs-keyword">var</span> m = str.match(<span class="hljs-regexp">/require\(['"]([^'"]*)['"]\)/gm</span>)
+    <span class="hljs-keyword">if</span> (m != <span class="hljs-literal">null</span>) {
+      m.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(e)</span> </span>{
+        <span class="hljs-keyword">var</span> name = e.substring(<span class="hljs-number">9</span>,e.length-<span class="hljs-number">2</span>)
+        <span class="hljs-keyword">if</span> (incs.indexOf(name) == -<span class="hljs-number">1</span>)
+          incs.push(name)
+      })
+    }
+  }
+</code></pre>
+<p>Now, export the editor module</p>
+<pre><div class="field">main</div><code class="lang-js">}
+
+<span class="hljs-built_in">module</span>.exports = main
+
+}).call(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span> || (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">window</span> !== <span class="hljs-string">'undefined'</span> ? <span class="hljs-built_in">window</span> : global)
+})
+</code></pre>
+<h1 id="html-layout">6. HTML layout</h1>
+<p>This HTML layout is used for the weave document.
+Here is the typical start of an HTML document.</p>
+<pre><div class="field">head</div><code class="lang-html"><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">lang</span>=<span class="hljs-value">"en"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">""</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+</code></pre>
+<p>These meta lines might help.</p>
+<pre><div class="field">head</div><code class="lang-html">  <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">charset</span>=<span class="hljs-value">"utf-8"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">http-equiv</span>=<span class="hljs-value">"Content-Language"</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">"en"</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"viewport"</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">"initial-scale=1"</span>&gt;</span>
+</code></pre>
+<p>And the transition from head to body</p>
+<pre><div class="field">transition</div><code class="lang-html"><span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+</code></pre>
+<p>Tail end</p>
+<pre><div class="field">tail</div><code class="lang-html"><span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span>
+</code></pre>
+<h1 id="html-stylesheet">7. HTML stylesheet</h1>
+<p>Make the formatted README look a little smarter:</p>
+<h2 id="vanilla-style">7.1 Vanilla style</h2>
+<p>This first section resets all <code>HTML</code> elements to reasonable default values.</p>
+<pre><div class="field">headstylesheet</div><code class="lang-css"><span class="hljs-tag">html</span>, <span class="hljs-tag">body</span>, <span class="hljs-tag">div</span>, <span class="hljs-tag">span</span>, <span class="hljs-tag">object</span>, <span class="hljs-tag">iframe</span>, <span class="hljs-tag">h1</span>, <span class="hljs-tag">h2</span>, <span class="hljs-tag">h3</span>, <span class="hljs-tag">h4</span>, <span class="hljs-tag">h5</span>, <span class="hljs-tag">h6</span>, <span class="hljs-tag">p</span>, <span class="hljs-tag">blockquote</span>, <span class="hljs-tag">pre</span>,
+<span class="hljs-tag">abbr</span>, <span class="hljs-tag">address</span>, <span class="hljs-tag">cite</span>, <span class="hljs-tag">code</span>, <span class="hljs-tag">del</span>, <span class="hljs-tag">dfn</span>, <span class="hljs-tag">em</span>, <span class="hljs-tag">img</span>, <span class="hljs-tag">ins</span>, <span class="hljs-tag">kbd</span>, <span class="hljs-tag">q</span>, <span class="hljs-tag">samp</span>,
+<span class="hljs-tag">small</span>, <span class="hljs-tag">strong</span>, <span class="hljs-tag">sub</span>, <span class="hljs-tag">sup</span>, <span class="hljs-tag">var</span>, <span class="hljs-tag">b</span>, <span class="hljs-tag">i</span>, <span class="hljs-tag">dl</span>, <span class="hljs-tag">dt</span>, <span class="hljs-tag">dd</span>, <span class="hljs-tag">ol</span>, <span class="hljs-tag">ul</span>, <span class="hljs-tag">li</span>, <span class="hljs-tag">a</span>,
+<span class="hljs-tag">fieldset</span>, <span class="hljs-tag">form</span>, <span class="hljs-tag">label</span>, <span class="hljs-tag">legend</span>, <span class="hljs-tag">table</span>, <span class="hljs-tag">caption</span>, <span class="hljs-tag">tbody</span>, <span class="hljs-tag">tfoot</span>, <span class="hljs-tag">thead</span>, <span class="hljs-tag">tr</span>, <span class="hljs-tag">th</span>, <span class="hljs-tag">td</span>,
+<span class="hljs-tag">article</span>, <span class="hljs-tag">aside</span>, <span class="hljs-tag">canvas</span>, <span class="hljs-tag">details</span>, <span class="hljs-tag">figcaption</span>, <span class="hljs-tag">figure</span>,
+<span class="hljs-tag">footer</span>, <span class="hljs-tag">header</span>, <span class="hljs-tag">hgroup</span>, <span class="hljs-tag">menu</span>, <span class="hljs-tag">nav</span>, <span class="hljs-tag">section</span>, <span class="hljs-tag">summary</span>, <span class="hljs-tag">time</span>, <span class="hljs-tag">mark</span>, <span class="hljs-tag">audio</span>, <span class="hljs-tag">video</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> block</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"><span class="hljs-number">0</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"><span class="hljs-number">0</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"><span class="hljs-number">0</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">outline</span>:<span class="hljs-value"><span class="hljs-number">0</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">line-height</span>:<span class="hljs-value"> <span class="hljs-number">140%</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> inherit</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> black</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">vertical-align</span>:<span class="hljs-value">baseline</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">text-decoration</span>:<span class="hljs-value"> none</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value">transparent</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-tag">a</span>, <span class="hljs-tag">code</span>, <span class="hljs-tag">span</span>, <span class="hljs-tag">b</span>, <span class="hljs-tag">i</span>, <span class="hljs-tag">em</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> inline</span></span>; <span class="hljs-rule">}</span></span>
+
+<span class="hljs-tag">body</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">100%</span></span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-at_rule">@<span class="hljs-keyword">media</span> print </span>{
+  <span class="hljs-tag">body</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">80%</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+}
+</code></pre>
+<h2 id="preliminary-material">7.2 Preliminary Material</h2>
+<p>The following stylesheet operates within the content generated by applying <code>weave</code>
+to the source document.
+<code>markover</code> marks up 3 areas before the main document body:
+title, tag, and a table of contents.</p>
+<p>Title and tag are each in a single id and only appear once in the display document.</p>
+<pre><div class="field">stylesheet</div><code class="lang-css"><span class="hljs-id">#content</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-family</span>:<span class="hljs-value"> <span class="hljs-string">"HelveticaNeue-Light"</span>, <span class="hljs-string">"Helvetica Neue Light"</span>, <span class="hljs-string">"Helvetica Neue"</span>, Helvetica, Arial, <span class="hljs-string">"Lucida Grande"</span>, sans-serif</span></span>; 
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-id">#content</span> <span class="hljs-id">#title</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">clear</span>:<span class="hljs-value"> both</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">text-align</span>:<span class="hljs-value"> center</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">140%</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> bold</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">2em</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span></span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-id">#content</span> <span class="hljs-id">#tag</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">clear</span>:<span class="hljs-value"> both</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">text-align</span>:<span class="hljs-value"> center</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">110%</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">1em</span> <span class="hljs-number">0</span></span></span>;
+<span class="hljs-rule">}</span></span>
+</code></pre>
+<p>The table of contents, in a single <code>toc</code> id, is slightly more complex.</p>
+<pre><div class="field">stylesheet</div><code class="lang-css"><span class="hljs-id">#content</span> <span class="hljs-id">#toc</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">1em</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">max-width</span>:<span class="hljs-value"> <span class="hljs-number">96%</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">page-break-after</span>:<span class="hljs-value"> always</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-at_rule">@<span class="hljs-keyword">media</span> screen and (min-width: <span class="hljs-number">641px</span>) </span>{
+  <span class="hljs-id">#content</span> <span class="hljs-id">#toc</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">float</span>:<span class="hljs-value"> left</span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">max-width</span>:<span class="hljs-value"> <span class="hljs-number">26%</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+}
+
+<span class="hljs-id">#content</span> <span class="hljs-class">.tocsn</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">float</span>:<span class="hljs-value"> left</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-id">#content</span> <span class="hljs-class">.tocsr</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">overflow</span>:<span class="hljs-value"> hidden</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-id">#content</span> <span class="hljs-id">#toc</span> <span class="hljs-tag">ol</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">list-style-type</span>:<span class="hljs-value"> none</span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-id">#content</span> <span class="hljs-id">#toc</span> <span class="hljs-tag">ol</span> <span class="hljs-tag">ol</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span> <span class="hljs-number">1em</span></span></span>;
+<span class="hljs-rule">}</span></span>
+</code></pre>
+<h2 id="main-body">7.3 Main body</h2>
+<p>The main document is in a single <code>doc</code> id
+Make the toc and doc with the same margins.</p>
+<pre><div class="field">stylesheet</div><code class="lang-css"><span class="hljs-id">#content</span> <span class="hljs-id">#doc</span>,
+<span class="hljs-id">#content</span> <span class="hljs-id">#toc</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">0</span> <span class="hljs-number">1em</span> <span class="hljs-number">0</span> <span class="hljs-number">1em</span></span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-id">#content</span> <span class="hljs-tag">p</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">text-indent</span>:<span class="hljs-value"> <span class="hljs-number">1em</span></span></span>; <span class="hljs-rule">}</span></span>
+
+<span class="hljs-id">#content</span> <span class="hljs-tag">code</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">120%</span></span></span>; <span class="hljs-rule">}</span></span>
+
+<span class="hljs-id">#content</span> <span class="hljs-tag">pre</span> <span class="hljs-tag">code</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-family</span>:<span class="hljs-value"> <span class="hljs-string">"Courier New"</span>, Courier, monospace</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">100%</span></span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-at_rule">@<span class="hljs-keyword">media</span> screen and (min-width: <span class="hljs-number">641px</span>) </span>{
+  <span class="hljs-id">#content</span> <span class="hljs-id">#doc</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">overflow</span>:<span class="hljs-value"> hidden</span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">max-width</span>:<span class="hljs-value"> <span class="hljs-number">70%</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+}
+</code></pre>
+<p>Field names are in a <code>field</code> class.</p>
+<pre><div class="field">stylesheet</div><code class="lang-css"><span class="hljs-id">#content</span> <span class="hljs-tag">pre</span> <span class="hljs-class">.field</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value">block</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">1em</span> <span class="hljs-number">1em</span> <span class="hljs-number">0em</span> <span class="hljs-number">0em</span></span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-id">#content</span> <span class="hljs-tag">pre</span> <span class="hljs-class">.field</span><span class="hljs-pseudo">::after</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">content</span>:<span class="hljs-value"> <span class="hljs-string">" :="</span></span></span>;
+<span class="hljs-rule">}</span></span>
+</code></pre>
+<p>The code blocks are in the <code>code</code> tag and
+have classes that identify their language.</p>
+<pre><div class="field">stylesheet</div><code class="lang-css"><span class="hljs-id">#content</span> <span class="hljs-tag">pre</span> <span class="hljs-tag">code</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">display</span>:<span class="hljs-value"> block</span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">1em</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">1em</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"> solid <span class="hljs-number">1px</span> <span class="hljs-hexcolor">#aaa</span></span></span>;
+<span class="hljs-rule">}</span></span>
+
+<span class="hljs-at_rule">@<span class="hljs-keyword">media</span> screen </span>{
+  <span class="hljs-id">#content</span> <span class="hljs-tag">pre</span> <span class="hljs-tag">code</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> AliceBlue</span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">overflow</span>:<span class="hljs-value"> auto</span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">max-height</span>:<span class="hljs-value"> <span class="hljs-number">30em</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+}
+
+<span class="hljs-at_rule">@<span class="hljs-keyword">media</span> print </span>{
+  <span class="hljs-id">#content</span> <span class="hljs-tag">pre</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">page-break-inside</span>:<span class="hljs-value"> avoid</span></span>;
+  <span class="hljs-rule">}</span></span>
+  <span class="hljs-id">#content</span> <span class="hljs-tag">pre</span> <span class="hljs-tag">code</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">overflow</span>:<span class="hljs-value"> visible</span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">word-wrap</span>:<span class="hljs-value"> break-word</span></span>;
+  <span class="hljs-rule">}</span></span>
+}
+</code></pre>
+<p>Each language uses a slightly different light background color.</p>
+<pre><div class="field">stylesheet</div><code class="lang-css"><span class="hljs-at_rule">@<span class="hljs-keyword">media</span> screen </span>{
+  <span class="hljs-id">#content</span> <span class="hljs-class">.lang-js</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> ivory</span></span>; <span class="hljs-rule">}</span></span>
+  <span class="hljs-id">#content</span> <span class="hljs-class">.lang-md</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> lightyellow</span></span>; <span class="hljs-rule">}</span></span>
+  <span class="hljs-id">#content</span> <span class="hljs-class">.lang-html</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> floralwhite</span></span>; <span class="hljs-rule">}</span></span>
+  <span class="hljs-id">#content</span> <span class="hljs-class">.lang-json</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> honeydew</span></span>; <span class="hljs-rule">}</span></span>
+  <span class="hljs-id">#content</span> <span class="hljs-class">.lang-css</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> cornsilk</span></span>; <span class="hljs-rule">}</span></span>
+  <span class="hljs-id">#content</span> <span class="hljs-class">.lang-sh</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">background-color</span>:<span class="hljs-value"> lemonchiffon</span></span>; <span class="hljs-rule">}</span></span>
+}
+</code></pre>
+<p>The header font sizes are set.</p>
+<pre><div class="field">stylesheet</div><code class="lang-css"><span class="hljs-id">#content</span> <span class="hljs-tag">h1</span>,
+<span class="hljs-id">#content</span> <span class="hljs-tag">h2</span>,
+<span class="hljs-id">#content</span> <span class="hljs-tag">h3</span>,
+<span class="hljs-id">#content</span> <span class="hljs-tag">h4</span>,
+<span class="hljs-id">#content</span> <span class="hljs-tag">h5</span>,
+<span class="hljs-id">#content</span> <span class="hljs-tag">h6</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">margin</span>:<span class="hljs-value"> <span class="hljs-number">0.5em</span> <span class="hljs-number">0em</span></span></span>;
+  <span class="hljs-rule"><span class="hljs-attribute">page-break-after</span>:<span class="hljs-value"> avoid
+</span></span></span>}
+
+<span class="hljs-id">#content</span> <span class="hljs-tag">h1</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">140%</span></span></span>; <span class="hljs-rule">}</span></span>
+<span class="hljs-id">#content</span> <span class="hljs-tag">h2</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">130%</span></span></span>; <span class="hljs-rule">}</span></span>
+<span class="hljs-id">#content</span> <span class="hljs-tag">h3</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">120%</span></span></span>; <span class="hljs-rule">}</span></span>
+<span class="hljs-id">#content</span> <span class="hljs-tag">h4</span>,
+<span class="hljs-id">#content</span> <span class="hljs-tag">h5</span>,
+<span class="hljs-id">#content</span> <span class="hljs-tag">h6</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">110%</span></span></span>; <span class="hljs-rule">}</span></span>
+</code></pre>
+<p>More styling</p>
+<pre><div class="field">stylesheet</div><code class="lang-css"><span class="hljs-id">#content</span> <span class="hljs-tag">a</span><span class="hljs-pseudo">:hover</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#aaa</span></span></span>; <span class="hljs-rule">}</span></span>
+
+<span class="hljs-id">#content</span> <span class="hljs-tag">a</span><span class="hljs-pseudo">:visited</span>,
+<span class="hljs-id">#content</span> <span class="hljs-tag">a</span> <span class="hljs-rules">{ <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#000</span></span></span>;<span class="hljs-rule">}</span></span>
+
+<span class="hljs-at_rule">@<span class="hljs-keyword">media</span> screen </span>{
+  <span class="hljs-id">#content</span> <span class="hljs-tag">a</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">text-decoration</span>:<span class="hljs-value"> underline</span></span>;
+  <span class="hljs-rule">}</span></span>
+}
+
+<span class="hljs-at_rule">@<span class="hljs-keyword">media</span> print </span>{
+  <span class="hljs-id">#content</span> <span class="hljs-tag">a</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">text-decoration</span>:<span class="hljs-value"> none</span></span>;
+  <span class="hljs-rule">}</span></span>
+  <span class="hljs-id">#content</span> <span class="hljs-id">#doc</span> <span class="hljs-tag">a</span><span class="hljs-attr_selector">[href]</span><span class="hljs-pseudo">:after</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">content</span>:<span class="hljs-value"> <span class="hljs-string">" ("</span> <span class="hljs-function">attr</span>(href) <span class="hljs-string">")"</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">font-size</span>:<span class="hljs-value"> <span class="hljs-number">90%</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+}
+</code></pre>
+<h2 id="highlight-markup">7.4 Highlight markup</h2>
+<p><code>highlight.js</code> specific styles for code blocks.
+Basic type markup:</p>
+<pre><div class="field">stylesheet</div><code class="lang-css"><span class="hljs-class">.hljs</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">overflow</span>:<span class="hljs-value"> auto</span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">padding</span>:<span class="hljs-value"> <span class="hljs-number">0.5em</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#333</span></span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.hljs-comment</span>, <span class="hljs-class">.diff</span> <span class="hljs-class">.hljs-header</span>, <span class="hljs-class">.hljs-javadoc</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#999</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">font-style</span>:<span class="hljs-value"> italic</span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.hljs-keyword</span>, <span class="hljs-class">.css</span> <span class="hljs-class">.rule</span> <span class="hljs-class">.hljs-keyword</span>, <span class="hljs-class">.hljs-winutils</span>, <span class="hljs-class">.nginx</span> <span class="hljs-class">.hljs-title</span>,
+<span class="hljs-class">.hljs-subst</span>, <span class="hljs-class">.hljs-request</span>, <span class="hljs-class">.hljs-status</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#333</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> bold</span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.hljs-number</span>, <span class="hljs-class">.hljs-hexcolor</span>, <span class="hljs-class">.ruby</span> <span class="hljs-class">.hljs-constant</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#088</span></span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.hljs-string</span>, <span class="hljs-class">.hljs-tag</span> <span class="hljs-class">.hljs-value</span>, <span class="hljs-class">.hljs-phpdoc</span>, <span class="hljs-class">.hljs-dartdoc</span>, <span class="hljs-class">.tex</span> <span class="hljs-class">.hljs-formula</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#d14</span></span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.hljs-title</span>, <span class="hljs-class">.hljs-id</span>, <span class="hljs-class">.scss</span> <span class="hljs-class">.hljs-preprocessor</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#900</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> bold</span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.hljs-list</span> <span class="hljs-class">.hljs-keyword</span>, <span class="hljs-class">.hljs-subst</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> normal</span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.hljs-class</span> <span class="hljs-class">.hljs-title</span>, <span class="hljs-class">.hljs-type</span>, <span class="hljs-class">.vhdl</span> <span class="hljs-class">.hljs-literal</span>, <span class="hljs-class">.tex</span> <span class="hljs-class">.hljs-command</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#458</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> bold</span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.hljs-tag</span>, <span class="hljs-class">.hljs-tag</span> <span class="hljs-class">.hljs-title</span>, <span class="hljs-class">.hljs-rules</span> <span class="hljs-class">.hljs-property</span>, <span class="hljs-class">.django</span> <span class="hljs-class">.hljs-tag</span> <span class="hljs-class">.hljs-keyword</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#000080</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> normal</span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.hljs-attribute</span>, <span class="hljs-class">.hljs-variable</span>, <span class="hljs-class">.lisp</span> <span class="hljs-class">.hljs-body</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#008080</span></span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.hljs-regexp</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#009926</span></span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.hljs-built_in</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#0086b3</span></span></span>;
+<span class="hljs-rule">}</span></span>
+</code></pre>
+<p>Language specific markup</p>
+<pre><div class="field">stylesheet</div><code class="lang-css"><span class="hljs-class">.hljs-symbol</span>, <span class="hljs-class">.ruby</span> <span class="hljs-class">.hljs-symbol</span> <span class="hljs-class">.hljs-string</span>, <span class="hljs-class">.lisp</span> <span class="hljs-class">.hljs-keyword</span>,
+<span class="hljs-class">.clojure</span> <span class="hljs-class">.hljs-keyword</span>, <span class="hljs-class">.scheme</span> <span class="hljs-class">.hljs-keyword</span>, <span class="hljs-class">.tex</span> <span class="hljs-class">.hljs-special</span>,
+<span class="hljs-class">.hljs-prompt</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#990073</span></span></span>;
+<span class="hljs-rule">}</span></span>
+</code></pre>
+<p>Other uncommon specialize markup:</p>
+<pre><div class="field">stylesheet</div><code class="lang-css"><span class="hljs-class">.hljs-preprocessor</span>, <span class="hljs-class">.hljs-pragma</span>, <span class="hljs-class">.hljs-pi</span>, <span class="hljs-class">.hljs-doctype</span>, <span class="hljs-class">.hljs-shebang</span>,
+<span class="hljs-class">.hljs-cdata</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#999</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> bold</span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.hljs-deletion</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#fdd</span></span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.hljs-addition</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#dfd</span></span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.diff</span> <span class="hljs-class">.hljs-change</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#0086b3</span></span></span>;
+<span class="hljs-rule">}</span></span>
+<span class="hljs-class">.hljs-chunk</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#aaa</span></span></span>;
+<span class="hljs-rule">}</span></span>
+</code></pre>
+<p>Using <code>CSS</code> it is possibly to have a separate
+layout for print media.
+<code>markover</code> overrides certain values for print media.</p>
+<pre><div class="field">stylesheet</div><code class="lang-css"><span class="hljs-at_rule">@<span class="hljs-keyword">media</span> print </span>{
+  <span class="hljs-class">.hljs</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">overflow</span>:<span class="hljs-value"> visible</span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">word-wrap</span>:<span class="hljs-value"> break-word</span></span>;
+  <span class="hljs-rule">}</span></span>
+  <span class="hljs-class">.hljs-number</span>, <span class="hljs-class">.hljs-hexcolor</span>, <span class="hljs-class">.ruby</span> <span class="hljs-class">.hljs-constant</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#888</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+  <span class="hljs-class">.hljs-string</span>, <span class="hljs-class">.hljs-tag</span> <span class="hljs-class">.hljs-value</span>, <span class="hljs-class">.hljs-phpdoc</span>, <span class="hljs-class">.hljs-dartdoc</span>, <span class="hljs-class">.tex</span> <span class="hljs-class">.hljs-formula</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#ddd</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+  <span class="hljs-class">.hljs-title</span>, <span class="hljs-class">.hljs-id</span>, <span class="hljs-class">.scss</span> <span class="hljs-class">.hljs-preprocessor</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#999</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+  <span class="hljs-class">.hljs-class</span> <span class="hljs-class">.hljs-title</span>, <span class="hljs-class">.hljs-type</span>, <span class="hljs-class">.vhdl</span> <span class="hljs-class">.hljs-literal</span>, <span class="hljs-class">.tex</span> <span class="hljs-class">.hljs-command</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#888</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+  <span class="hljs-class">.hljs-tag</span>, <span class="hljs-class">.hljs-tag</span> <span class="hljs-class">.hljs-title</span>, <span class="hljs-class">.hljs-rules</span> <span class="hljs-class">.hljs-property</span>, <span class="hljs-class">.django</span> <span class="hljs-class">.hljs-tag</span> <span class="hljs-class">.hljs-keyword</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#888</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+  <span class="hljs-class">.hljs-attribute</span>, <span class="hljs-class">.hljs-variable</span>, <span class="hljs-class">.lisp</span> <span class="hljs-class">.hljs-body</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#888</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+  <span class="hljs-class">.hljs-regexp</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#999</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+  <span class="hljs-class">.hljs-symbol</span>, <span class="hljs-class">.ruby</span> <span class="hljs-class">.hljs-symbol</span> <span class="hljs-class">.hljs-string</span>, <span class="hljs-class">.lisp</span> <span class="hljs-class">.hljs-keyword</span>,
+  <span class="hljs-class">.clojure</span> <span class="hljs-class">.hljs-keyword</span>, <span class="hljs-class">.scheme</span> <span class="hljs-class">.hljs-keyword</span>, <span class="hljs-class">.tex</span> <span class="hljs-class">.hljs-special</span>,
+  <span class="hljs-class">.hljs-prompt</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#999</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+  <span class="hljs-class">.hljs-built_in</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#888</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+  <span class="hljs-class">.hljs-deletion</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#ddd</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+  <span class="hljs-class">.hljs-addition</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#ddd</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+  <span class="hljs-class">.diff</span> <span class="hljs-class">.hljs-change</span> <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">background</span>:<span class="hljs-value"> <span class="hljs-hexcolor">#888</span></span></span>;
+  <span class="hljs-rule">}</span></span>
+}
+</code></pre>
+<h1 id="modules">8. Modules</h1>
+<p><code>pry</code> makes use of several <code>CommonJS</code> modules.
+The code is omitted from the <code>weave</code> output.</p>
+<p><code>markover</code> provides weave and tangle.</p>
+<p><code>markover</code> depends on <code>marked</code> for parsing <code>markdown</code> documents.</p>
+<p><code>markover</code> depends on <code>highlight.js</code> for source code syntax
+highlighting.</p>
+<p>My version of <code>highlight.js</code> reimplements the &#39;index.js&#39; file in the
+distribution.
+It requires &#39;highlight_highlight.js&#39; and then requires all the languages
+that are used in the document and registers them</p>
+<p>This seems to leave require.loaded with 2 versions of highlight: the
+raw version without any languages and this one which has the languages
+included.</p>
+<h1 id="sharing-the-code">9. Sharing the Code</h1>
+<p>Using the CouchDB replicator, the JSON version of this document
+can be moved from one CouchDB to another.</p>
+<p>Or, select the <a href="README.json">README.json</a> then copy and paste
+the document to your CouchDB.</p>
+<p>If you have <code>markover</code> installed, then use the following to build
+a <code>JSON</code> object.</p>
+<pre><code class="lang-sh">node <span class="hljs-operator">-e</span> <span class="hljs-string">"require('markover').tangleStream({sourcetarget: 'README.md'})"</span> &lt; README.md &gt; pry.json
+</code></pre>
+<p>And the following for the <code>HTML</code> documentation.</p>
+<pre><code class="lang-sh">node <span class="hljs-operator">-e</span> <span class="hljs-string">"require('markover').weaveStream()"</span> &lt; README.md &gt; index.html
+</code></pre>
+<p>The display of this &#39;README.md&#39; file on GitHub is readable, but not
+quite right since GitHub doesn&#39;t process the field names for the code
+blocks.</p>
+<h1 id="final-thoughts">10. Final Thoughts</h1>
+<p>Although the existing editor works well enough, a more sophisticated
+editor would be useful for large projects.
+It should be possible to change to the <a href="http://ace.c9.io">ACE</a> editor.
+I made minor changes in the markdown mode to work with hash tagged field
+names, adding json submode, etc. Another interesting approach would be
+the <a href="http://hallojs.org">Hallo</a> editor. </p>
+<p>Clearly tools like <code>kanso</code> provide many additional facilities for
+deploying a <code>CouchApp</code>.
+Many of these capabilities could be included in <code>pry</code>.
+But before implementing more capabilities, I will try using
+the existing system for a while.</p>
+<p>In order to bootstap <code>pry</code> on a <code>CouchDB</code> I wrote
+a separate <code>nodejs</code> utility that used
+<code>markover</code> to tangle the source document and then
+upload the <code>JSON</code> to the <code>CouchDB</code>.
+Run the utility as follows:</p>
+<pre><code class="lang-sh">node update.js &lt; README.md
+</code></pre>
+<p>To verify that the editor was working properly,
+I would make minor changes to the documentation and code.
+But the bulk of the editing occured on my local machine.
+This brings into question whether <code>pry</code> works effectively.</p>
+<p>I&#39;ve excluded the source from the documentation.</p>
+<p>Somewhat surprisingly it is possible to edit documents on
+mobile devices.
+The <code>pry</code> document does take some time to tangle and weave
+on a mobile device.</p>
+<p>I was able to copy and paste the <code>pry</code> JSON to deploy it on <code>Cloudant</code>.
+And it is able to update itself on it.</p>
+<p>Although attachments are not consistent with the &#39;one&#39; in, &#39;one&#39; out
+structure of <code>pry</code>, there is a clear utility in supporting attachments.</p>
+<p>Being able to insert code could help with the layout of the shows field.
+Currently, the embedded anonymous functions are simple, yet hard to
+understand. Being able to insert a quoted function into the middle of
+the shows structure is certainly a solution. Another possibility is to
+break the shows structure apart, like:</p>
+<pre><code>```#shows
+{
+  &quot;404&quot; :
+```
+
+```#+shows
+function(doc, req) {
+  return {
+    body: &#39;&lt;h1&gt;404 - Document not found&lt;/h1&gt;\n&#39;,
+    headers: {&#39;Content-Type&#39;: &#39;text/html&#39;}
+  }
+},
+```
+
+etc.
+
+```#shows
+}
+```
+</code></pre><p>This would make the shows functions much more readable.
+However, this requires a change to <code>markover</code> to handle
+appending quoted fields to non-quoted fields.</p>
+</div></div></body>
+</html>
+
